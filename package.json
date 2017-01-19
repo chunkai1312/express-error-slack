@@ -1,0 +1,47 @@
+{
+  "name": "express-error-slack",
+  "version": "0.1.0",
+  "description": "Express error handling middleware for reporting error to Slack",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc mocha test/**/*.test.js",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "lint": "eslint lib test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/chunkai1312/itri-tts.git"
+  },
+  "keywords": [
+    "express-error-slack",
+    "express",
+    "error",
+    "error handling",
+    "middleware",
+    "slack"
+  ],
+  "author": "Chun-Kai Wang <chunkai1312@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chunkai1312/express-error-slack/issues"
+  },
+  "homepage": "https://github.com/chunkai1312/express-error-slack#readme",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "slack-node": "^0.1.8"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "codecov": "^1.0.1",
+    "eslint": "^3.13.1",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^2.0.1",
+    "express": "^4.14.0",
+    "http-errors": "^1.5.1",
+    "mocha": "^3.2.0",
+    "nyc": "^10.1.2",
+    "sinon": "^1.17.7",
+    "supertest": "^2.0.1"
+  }
+}
