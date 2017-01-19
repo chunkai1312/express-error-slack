@@ -26,7 +26,7 @@ app.use(errorToSlack({ webhookUri: 'https://hooks.slack.com/services/TOKEN'})
 
 MIT © [Chun-Kai Wang](https://github.com/chunkai1312)
 
-[npm-image]: https://img.shields.io/npm/v/express-error-slack
+[npm-image]: https://img.shields.io/npm/v/express-error-slack.svg
 [npm-url]: https://npmjs.org/package/express-error-slack
 [travis-image]: https://img.shields.io/travis/chunkai1312/express-error-slack.svg
 [travis-url]: https://travis-ci.org/chunkai1312/express-error-slack
