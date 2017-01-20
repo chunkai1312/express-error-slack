@@ -24,7 +24,7 @@ app.use(errorToSlack({ webhookUri: 'https://hooks.slack.com/services/TOKEN'})
 
 ## Result Example
 
-![Slack Message](https://github.com/chunkai1312/express-error-slack/raw/master/screenshot.jpg)
+![Slack Message](https://github.com/chunkai1312/express-error-slack/raw/master/screenshot.png)
 
 ## License
 
