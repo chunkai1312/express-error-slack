@@ -4,10 +4,17 @@
   "description": "Express error handling middleware for reporting error to Slack",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha test/**/*.test.js",
+    "prebuild": "rimraf lib",
+    "build": "babel src -d lib",
+    "test": "nyc mocha --compilers js:babel-register test/**/*.test.js",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "lint": "eslint lib test"
+    "lint": "eslint lib test",
+    "prepublish": "npm run build"
   },
+  "files": [
+    "index.js",
+    "lib"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/chunkai1312/express-error-slack.git"
@@ -31,6 +38,12 @@
     "slack-node": "^0.1.8"
   },
   "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "babel-register": "^6.22.0",
     "chai": "^3.5.0",
     "codecov": "^1.0.1",
     "eslint": "^3.13.1",
@@ -41,6 +54,7 @@
     "http-errors": "^1.5.1",
     "mocha": "^3.2.0",
     "nyc": "^10.1.2",
+    "rimraf": "^2.5.4",
     "sinon": "^1.17.7",
     "supertest": "^2.0.1"
   }
