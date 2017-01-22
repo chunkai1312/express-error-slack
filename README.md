@@ -19,7 +19,37 @@ const express = require('express')
 const errorToSlack = require('express-error-slack')
 
 const app = express()
+
+// Route that triggers a error
+app.get('/error', function createError(req, res, next) {
+  const err = new Error('Internal Server Error')
+  err.status = 500
+  next(err)
+});
+
+// Send error reporting to Slack
 app.use(errorToSlack({ webhookUri: 'https://hooks.slack.com/services/TOKEN'})
+
+app.listen(3000)
+```
+
+## API
+
+```js
+const errorToSlack = require('express-error-slack')
+```
+
+### errorToSlack(options)
+
+Create a error handling middleware to send error reporting to Slack channel.
+
+#### Options
+
+```js
+{
+  webhookUri: String  // (required) Your Slack webhook uri that the channel will receive error reporting.
+  skip: function (err, req, res) { return false }  // (optional) A function to determine if handler is skipped, defaults to returning false.
+}
 ```
 
 ## Result Example
