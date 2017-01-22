@@ -13,14 +13,16 @@ describe('Express Error Slack', () => {
     spy.reset()
   })
 
+  it('should throw error if options not a object', () => {
+    expect(() => errorToSlack(false)).to.throw(Error)
+  })
+
   it('should throw error if missing webhookUri', () => {
-    const app = express()
-    try {
-      app.use(errorToSlack())
-    } catch (err) {
-      expect(err).to.exist
-      expect(err.message).to.equal('Missing webhookUri')
-    }
+    expect(() => errorToSlack({})).to.throw(Error)
+  })
+
+  it('should throw error if webhookUri not a string', () => {
+    expect(() => errorToSlack({ webhookUri: false })).to.throw(Error)
   })
 
   it('should send error to slack for status code 4xx', (done) => {
@@ -51,6 +53,24 @@ describe('Express Error Slack', () => {
         expect(err).to.not.exist
         expect(spy.calledOnce).to.be.true
         expect(spy.args[0][0].attachments[0]).to.have.property('color', 'danger')
+        done()
+      })
+  })
+
+  it('should skip to send error to slack if options.skip returns true', (done) => {
+    const app = express()
+    app.use((req, res, next) => next(createError(404)))
+    app.use(errorToSlack({
+      webhookUri: 'https://hooks.slack.com/services/TOKEN',
+      skip: (err, req, res) => err.status === 404
+    }))
+
+    request(app)
+      .get('/')
+      .expect(404)
+      .end((err, res) => {
+        expect(err).to.not.exist
+        expect(spy.calledOnce).to.be.false
         done()
       })
   })
