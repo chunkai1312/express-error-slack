@@ -1,12 +1,12 @@
 {
   "name": "express-error-slack",
-  "version": "0.3.1",
+  "version": "1.0.0",
   "description": "Express error handling middleware for reporting error to Slack",
   "main": "index.js",
   "scripts": {
     "prebuild": "rimraf lib",
     "build": "babel src -d lib",
-    "test": "nyc mocha --compilers js:babel-register test/**/*.test.js",
+    "test": "nyc mocha --compilers js:babel-register test/**/*.spec.js",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "lint": "eslint lib test",
     "prepublish": "npm run build"
