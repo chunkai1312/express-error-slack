@@ -1,7 +1,21 @@
 import Slack from 'slack-node'
 import { extend, isEmpty } from 'lodash'
 
-function sendErrorToSlack (webhookUri, err, req) {
+function getRemoteAddress (req) {
+  return req.ip ||
+    req._remoteAddress ||
+    (req.connection && req.connection.remoteAddress) ||
+    undefined
+}
+
+function createCodeBlock (title, code) {
+  if (isEmpty(code)) return ''
+  code = (typeof code === 'string') ? code.trim() : JSON.stringify(code, null, 2)
+  const tripleBackticks = '```'
+  return `_${title}_${tripleBackticks}${code}${tripleBackticks}\n`
+}
+
+export default function sendErrorToSlack (webhookUri, err, req) {
   const slack = new Slack()
   slack.setWebhook(webhookUri)
 
@@ -34,43 +48,4 @@ function sendErrorToSlack (webhookUri, err, req) {
   })
 
   slack.webhook({ attachments: [attachment] }, (error, response) => { if (error) console.error(error) })
-}
-
-function getRemoteAddress (req) {
-  return req.ip ||
-    req._remoteAddress ||
-    (req.connection && req.connection.remoteAddress) ||
-    undefined
-}
-
-function createCodeBlock (title, code) {
-  if (isEmpty(code)) return ''
-  code = (typeof code === 'string') ? code.trim() : JSON.stringify(code, null, 2)
-  const tripleBackticks = '```'
-  return `_${title}_${tripleBackticks}${code}${tripleBackticks}\n`
-}
-
-export default function (options = {}) {
-  if (typeof options !== 'object') {
-    throw new Error('Expected options to be a object')
-  }
-
-  if (typeof options.webhookUri === 'undefined') {
-    throw new Error('Missing webhookUri')
-  }
-
-  if (typeof options.webhookUri !== 'string') {
-    throw new Error('Expected webhookUri to be a string')
-  }
-
-  const webhookUri = options.webhookUri
-  const skip = options.skip || false
-
-  return function (err, req, res, next) {
-    err.status = err.status || 500
-
-    if (skip !== false && skip(err, req, res)) return next(err)
-    sendErrorToSlack(webhookUri, err, req)
-    next(err)
-  }
 }
