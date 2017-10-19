@@ -2,7 +2,7 @@
   "name": "express-error-slack",
   "version": "1.0.0",
   "description": "Express error handling middleware for reporting error to Slack",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "prebuild": "rimraf lib",
     "build": "babel src -d lib",
@@ -12,7 +12,6 @@
     "prepublish": "npm run build"
   },
   "files": [
-    "index.js",
     "lib"
   ],
   "repository": {
