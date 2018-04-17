@@ -4,7 +4,7 @@ import createError from 'http-errors'
 import request from 'supertest'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import errorToSlack from '../src/expressErrorSlack'
+import errorToSlack from '../src'
 
 describe('Express Error Slack', () => {
   const spy = sinon.spy(Slack.prototype, 'webhook')
