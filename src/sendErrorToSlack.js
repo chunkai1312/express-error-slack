@@ -2,7 +2,8 @@ import Slack from 'slack-node'
 import { extend, isEmpty } from 'lodash'
 
 function getRemoteAddress (req) {
-  return req.ip ||
+  return req.headers['x-forwarded-for'] ||
+    req.ip ||
     req._remoteAddress ||
     (req.connection && req.connection.remoteAddress) ||
     undefined
