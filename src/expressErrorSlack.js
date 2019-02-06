@@ -18,8 +18,8 @@ export default function (options = {}) {
 
   return function (err, req, res, next) {
     if (!(err instanceof Error)) {
-        // In case a number or other primitive is thrown
-        err = new Error(err)
+      // In case a number or other primitive is thrown
+      err = new Error(err)
     }
 
     err.status = err.status || 500
