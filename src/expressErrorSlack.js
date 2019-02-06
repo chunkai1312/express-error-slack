@@ -17,6 +17,11 @@ export default function (options = {}) {
   const skip = options.skip || false
 
   return function (err, req, res, next) {
+    if (!(err instanceof Error)) {
+        // In case a number or other primitive is thrown
+        err = new Error(err)
+    }
+
     err.status = err.status || 500
 
     if (skip !== false && skip(err, req, res)) return next(err)
