@@ -9,10 +9,15 @@ const sinon = require('sinon')
 const errorToSlack = require('../lib')
 
 describe('Express Error Slack', () => {
-  const spy = sinon.spy(Slack.prototype, 'webhook')
+  const sandbox = sinon.createSandbox()
+  let spy
 
   beforeEach(() => {
-    spy.reset()
+    spy = sandbox.spy(Slack.prototype, 'webhook')
+  })
+
+  afterEach(() => {
+    sandbox.restore()
   })
 
   it('should throw error if options not a object', () => {
@@ -46,6 +51,22 @@ describe('Express Error Slack', () => {
   it('should send error to slack for status code 5xx', (done) => {
     const app = express()
     app.use((req, res, next) => next(createError(500)))
+    app.use(errorToSlack({ webhookUri: 'https://hooks.slack.com/services/TOKEN' }))
+
+    request(app)
+      .get('/')
+      .expect(500)
+      .end((err, res) => {
+        expect(err).to.not.exist
+        expect(spy.calledOnce).to.be.true
+        expect(spy.args[0][0].attachments[0]).to.have.property('color', 'danger')
+        done()
+      })
+  })
+
+  it('should send error to slack if error exists', (done) => {
+    const app = express()
+    app.use((req, res, next) => next(1))
     app.use(errorToSlack({ webhookUri: 'https://hooks.slack.com/services/TOKEN' }))
 
     request(app)
