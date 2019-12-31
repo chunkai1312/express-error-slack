@@ -1,10 +1,12 @@
-import express from 'express'
-import Slack from 'slack-node'
-import createError from 'http-errors'
-import request from 'supertest'
-import { expect } from 'chai'
-import sinon from 'sinon'
-import errorToSlack from '../src'
+'use strict'
+
+const express = require('express')
+const Slack = require('slack-node')
+const createError = require('http-errors')
+const request = require('supertest')
+const { expect } = require('chai')
+const sinon = require('sinon')
+const errorToSlack = require('../lib')
 
 describe('Express Error Slack', () => {
   const spy = sinon.spy(Slack.prototype, 'webhook')
