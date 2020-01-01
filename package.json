@@ -1,6 +1,6 @@
 {
   "name": "express-error-slack",
-  "version": "1.1.2",
+  "version": "2.0.0",
   "description": "Express error handling middleware for reporting error to Slack",
   "main": "lib/index.js",
   "scripts": {
