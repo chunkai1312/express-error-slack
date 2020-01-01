@@ -47,12 +47,14 @@ Create a error handling middleware to send error reporting to Slack channel.
 ```js
 {
   webhookUri: String,
-  skip: function (err, req, res) { return false }
+  skip: function (err, req, res) { return false },
+  debug: Boolean
 }
 ```
 
 - `webhookUri`: Required. Your Slack webhook uri that the channel will receive error reporting.
-- `skip`: Optional. A function to determine if handler is skipped, defaults to returning false.
+- `skip`: Optional. A function to determine if handler is skipped. Defaults to always returning `false`.
+- `debug`: Optional. Show logging of response from Slack if set true. Defaults to `false`.
 
 ## Result Example
 

@@ -30,7 +30,6 @@
   },
   "homepage": "https://github.com/chunkai1312/express-error-slack#readme",
   "dependencies": {
-    "lodash": "^4.17.15",
     "slack-node": "^0.1.8"
   },
   "devDependencies": {

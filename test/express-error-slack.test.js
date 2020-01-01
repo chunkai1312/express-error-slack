@@ -10,22 +10,16 @@ const errorToSlack = require('../lib')
 
 describe('Express Error Slack', () => {
   const sandbox = sinon.createSandbox()
-  let spy
+  let stub
 
   beforeEach(() => {
-    spy = sandbox.spy(Slack.prototype, 'webhook')
+    stub = sandbox
+      .stub(Slack.prototype, 'webhook')
+      .callsFake((options, cb) => cb(null, { response: 'ok' }))
   })
 
   afterEach(() => {
     sandbox.restore()
-  })
-
-  it('should throw error if options not a object', () => {
-    expect(() => errorToSlack(false)).to.throw(Error)
-  })
-
-  it('should throw error if missing webhookUri', () => {
-    expect(() => errorToSlack({})).to.throw(Error)
   })
 
   it('should throw error if webhookUri not a string', () => {
@@ -42,8 +36,8 @@ describe('Express Error Slack', () => {
       .expect(400)
       .end((err, res) => {
         expect(err).to.not.exist
-        expect(spy.calledOnce).to.be.true
-        expect(spy.args[0][0].attachments[0]).to.have.property('color', 'warning')
+        expect(stub.calledOnce).to.be.true
+        expect(stub.args[0][0].attachments[0]).to.have.property('color', 'warning')
         done()
       })
   })
@@ -58,8 +52,8 @@ describe('Express Error Slack', () => {
       .expect(500)
       .end((err, res) => {
         expect(err).to.not.exist
-        expect(spy.calledOnce).to.be.true
-        expect(spy.args[0][0].attachments[0]).to.have.property('color', 'danger')
+        expect(stub.calledOnce).to.be.true
+        expect(stub.args[0][0].attachments[0]).to.have.property('color', 'danger')
         done()
       })
   })
@@ -74,13 +68,13 @@ describe('Express Error Slack', () => {
       .expect(500)
       .end((err, res) => {
         expect(err).to.not.exist
-        expect(spy.calledOnce).to.be.true
-        expect(spy.args[0][0].attachments[0]).to.have.property('color', 'danger')
+        expect(stub.calledOnce).to.be.true
+        expect(stub.args[0][0].attachments[0]).to.have.property('color', 'danger')
         done()
       })
   })
 
-  it('should skip to send error to slack if options.skip returns true', (done) => {
+  it('should skip to send error to slack if options.skip is set', (done) => {
     const app = express()
     app.use((req, res, next) => next(createError(404)))
     app.use(errorToSlack({
@@ -93,7 +87,47 @@ describe('Express Error Slack', () => {
       .expect(404)
       .end((err, res) => {
         expect(err).to.not.exist
-        expect(spy.calledOnce).to.be.false
+        expect(stub.calledOnce).to.be.false
+        done()
+      })
+  })
+
+  it('should show logging of response from slack if options.debug is true', (done) => {
+    const app = express()
+    app.use((req, res, next) => next(createError(404)))
+    app.use(errorToSlack({
+      webhookUri: 'https://hooks.slack.com/services/TOKEN',
+      debug: true
+    }))
+
+    request(app)
+      .get('/')
+      .expect(404)
+      .end((err, res) => {
+        expect(err).to.not.exist
+        expect(stub.calledOnce).to.be.true
+        expect(stub.args[0][0].attachments[0]).to.have.property('color', 'warning')
+        done()
+      })
+  })
+
+  it('should show logging of error from slack if options.debug is true', (done) => {
+    stub.callsFake((options, cb) => cb(new Error()))
+
+    const app = express()
+    app.use((req, res, next) => next(createError(404)))
+    app.use(errorToSlack({
+      webhookUri: 'https://hooks.slack.com/services/TOKEN',
+      debug: true
+    }))
+
+    request(app)
+      .get('/')
+      .expect(404)
+      .end((err, res) => {
+        expect(err).to.not.exist
+        expect(stub.calledOnce).to.be.true
+        expect(stub.args[0][0].attachments[0]).to.have.property('color', 'warning')
         done()
       })
   })

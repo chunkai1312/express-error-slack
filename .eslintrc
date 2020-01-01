@@ -3,5 +3,16 @@
   "env": {
     "node": true,
     "mocha": true
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.test.js",
+        "*.spec.js"
+      ],
+      "rules": {
+        "no-unused-expressions": "off"
+      }
+    }
+  ]
 }
